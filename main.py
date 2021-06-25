@@ -3,17 +3,20 @@ import locale
 
 locale.setlocale(locale.LC_ALL, '')
 
+decimalPlaces = 2
+
 
 def format_float_number(float_number):
-    return locale.format_string("%d", round(float_number, 3), grouping=True)
+    return locale.format_string("%d", round(float_number, decimalPlaces), grouping=True)
+
 
 def format_float_number_percentage(float_number):
     return format_float_number(float_number) + "%"
 
 
-def format_float_number_percentage_igned(float_number):
+def format_float_number_percentage_signed(float_number):
     # return '{0:+}%'.format(round(float_number, 3)).replace(".", ",")
-    return locale.str(round(float_number, 3)) + "%"
+    return locale.str(round(float_number, decimalPlaces)) + "%"
 
 
 class Coin:
@@ -28,9 +31,9 @@ class Coin:
         self.ath = ath
 
     def __str__(self):
-        return self.name + ", 1h Change: " + format_float_number_percentage_igned(
-            self.price_change_percentage_1h_in_currency) + ", 24h Change: " + format_float_number_percentage_igned(
-            self.price_change_percentage_24h_in_currency) + ", 7d Change: " + format_float_number_percentage_igned(
+        return self.name + ", 1h Change: " + format_float_number_percentage_signed(
+            self.price_change_percentage_1h_in_currency) + ", 24h Change: " + format_float_number_percentage_signed(
+            self.price_change_percentage_24h_in_currency) + ", 7d Change: " + format_float_number_percentage_signed(
             self.price_change_percentage_7d_in_currency) + "; \n ATH Price-Drop: " + format_float_number_percentage(
             (1 - (self.current_price / self.ath)) * 100)
 
@@ -72,11 +75,15 @@ for coin in queryResult:
 print(", ".join(coinNames))
 print("")
 print("Total Market changes: ")
-print("1h Change: " + format_float_number_percentage_igned(price_change_percentage_1h_in_currency / len(queryResult)))
-print("24h Change: " + format_float_number_percentage_igned(price_change_percentage_24h_in_currency / len(queryResult)))
-print("7 day Change: " + format_float_number_percentage_igned(price_change_percentage_7d_in_currency / len(queryResult)))
-print("14 day Change: " + format_float_number_percentage_igned(price_change_percentage_14d_in_currency / len(queryResult)))
-print("30 day Change: " + format_float_number_percentage_igned(price_change_percentage_30d_in_currency / len(queryResult)))
+print("1h Change: " + format_float_number_percentage_signed(price_change_percentage_1h_in_currency / len(queryResult)))
+print(
+    "24h Change: " + format_float_number_percentage_signed(price_change_percentage_24h_in_currency / len(queryResult)))
+print(
+    "7 day Change: " + format_float_number_percentage_signed(price_change_percentage_7d_in_currency / len(queryResult)))
+print("14 day Change: " + format_float_number_percentage_signed(
+    price_change_percentage_14d_in_currency / len(queryResult)))
+print("30 day Change: " + format_float_number_percentage_signed(
+    price_change_percentage_30d_in_currency / len(queryResult)))
 print("total_market_cap: " + locale.currency(total_market_cap, grouping=True, international=True))
 print("total_volume: " + locale.currency(total_volume, grouping=True, international=True))
 
@@ -107,13 +114,30 @@ max7d = max([x for x in top_price_change_percentage_7d_in_currency if x is not N
 max14d = max([x for x in top_price_change_percentage_14d_in_currency if x is not None])
 max30d = max([x for x in top_price_change_percentage_30d_in_currency if x is not None])
 
+min1h = min([x for x in top_price_change_percentage_1h_in_currency if x is not None])
+min24h = min([x for x in top_price_change_percentage_24h_in_currency if x is not None])
+min7d = min([x for x in top_price_change_percentage_7d_in_currency if x is not None])
+min14d = min([x for x in top_price_change_percentage_14d_in_currency if x is not None])
+min30d = min([x for x in top_price_change_percentage_30d_in_currency if x is not None])
+
 print()
 print("Top coins: ")
-print("Top Price Change 1h: " + format_float_number_percentage_igned(max1h) + ", Coin: " + topCoins[
+print("Top Price Change 1h: " + format_float_number_percentage_signed(max1h) + ", Coin: " + topCoins[
     top_price_change_percentage_1h_in_currency.index(max1h)])
-print("Top Price Change 24h: " + format_float_number_percentage_igned(max24h) + ", Coin: " + topCoins[
+print("Top Price Change 24h: " + format_float_number_percentage_signed(max24h) + ", Coin: " + topCoins[
     top_price_change_percentage_24h_in_currency.index(max24h)])
-print("Top Price Change 14d: " + format_float_number_percentage_igned(max14d) + ", Coin: " + topCoins[
+print("Top Price Change 14d: " + format_float_number_percentage_signed(max14d) + ", Coin: " + topCoins[
     top_price_change_percentage_14d_in_currency.index(max14d)])
-print("Top Price Change 30d: " + format_float_number_percentage_igned(max30d) + ", Coin: " + topCoins[
+print("Top Price Change 30d: " + format_float_number_percentage_signed(max30d) + ", Coin: " + topCoins[
     top_price_change_percentage_30d_in_currency.index(max30d)])
+
+print()
+print("Flop coins: ")
+print("Flop Price Change 1h: " + format_float_number_percentage_signed(min1h) + ", Coin: " + topCoins[
+    top_price_change_percentage_1h_in_currency.index(min1h)])
+print("Flop Price Change 24h: " + format_float_number_percentage_signed(min24h) + ", Coin: " + topCoins[
+    top_price_change_percentage_24h_in_currency.index(min24h)])
+print("Flop Price Change 14d: " + format_float_number_percentage_signed(min14d) + ", Coin: " + topCoins[
+    top_price_change_percentage_14d_in_currency.index(min14d)])
+print("Flop Price Change 30d: " + format_float_number_percentage_signed(min30d) + ", Coin: " + topCoins[
+    top_price_change_percentage_30d_in_currency.index(min30d)])
