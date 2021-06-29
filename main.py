@@ -1,5 +1,6 @@
-from pycoingecko import CoinGeckoAPI
 import locale
+
+from pycoingecko import CoinGeckoAPI
 
 locale.setlocale(locale.LC_ALL, '')
 
@@ -97,7 +98,8 @@ top_price_change_percentage_14d_in_currency = []
 top_price_change_percentage_30d_in_currency = []
 
 for coin in queryResult:
-    topCoins.append(coin["name"] + " (rank " + str(coin["market_cap_rank"]) + ")")
+    topCoins.append(
+        coin["name"] + " (rank " + str(coin["market_cap_rank"]) + "; " + locale.currency(coin["current_price"]) + ")")
     top_price_change_percentage_1h_in_currency.append(coin["price_change_percentage_1h_in_currency"])
     top_price_change_percentage_24h_in_currency.append(coin["price_change_percentage_24h_in_currency"])
     top_price_change_percentage_7d_in_currency.append(coin["price_change_percentage_7d_in_currency"])
